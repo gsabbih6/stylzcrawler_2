@@ -23,7 +23,7 @@ public class Controller {
     }
 
     private void init() throws Exception {
-        String crawlStorageFolder = "/Users/admin/Documents/Java Projects/stylzcrawler/crawl";
+        String crawlStorageFolder = "C:\\Users\\fzp281\\IdeaProjects\\stylzcrawler_2\\crawl";
         ///Users/admin/CLionProjects/menkomo/crawl/temp";
         int numberOfCrawlers = 7;
 

@@ -22,19 +22,33 @@ public class Product {
     Set<String> image_urls;
     @NotNull(message = "product_details  is required")
     String product_details;
-
+    @NotNull(message = "product_details  is required")
     Set<String> price;
 
-//    String vendorProductCode;
-
+    //    String vendorProductCode;
+    @NotNull(message = "product_details  is required")
     String brand_name;
+    @NotNull(message = "shipping_price  is required") String shipping_price;
+    @NotNull(message = "currency  is required") String currency;
+    @NotNull(message = "product_details  is required") String program_name;
     UUID store_id;
-    Set<UUID> category_id;
+    @NotNull(message = "product_details  is required") Set<UUID> category_id;
     UUID color_id;
+    @NotNull(message = "product_details  is required") String SKU;
     boolean available = true;
+    @NotNull(message = "product_details  is required") String program_icon_url
+            = "https://d2gjrq7hs8he14.cloudfront.net/webpack4/logo@2x-8d56700bf4acf5930388f3bea97c0260.png";
 
     /* use empty constructor*/
     public Product() {
+    }
+
+    /* use empty constructor*/
+    public Product(String program_name, String SKU) {
+        this.id = UUID.nameUUIDFromBytes((SKU + program_name).getBytes());
+        this.program_name
+                = program_name;
+        this.SKU = SKU;
     }
 
     public Product(String payment_url, String product_name, Set<String> image_urls, String product_details, String price, String brand_name, Set<UUID> category_id, UUID store_id) {
@@ -50,5 +64,16 @@ public class Product {
         this.brand_name = brand_name;
         this.category_id = category_id;
         this.store_id = store_id;
+    }
+
+    public void setPrice(String price) {
+        if (this.price == null) {
+            this.price = new LinkedHashSet<>();
+        }
+        this.price.add(price);
+    }
+
+    public Set<String> getPrice() {
+        return price;
     }
 }

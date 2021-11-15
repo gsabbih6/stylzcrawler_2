@@ -12,10 +12,19 @@ import java.util.UUID;
 public class Category {
     @PrimaryKey
     UUID id;
+    UUID parent_id;
     String name;
-
+    /* use empty constructor*/
+    public Category() {
+    }
     public Category(String name) {
-        this.id = UUID.nameUUIDFromBytes((name+"CategoryDiyanu").getBytes());
+        this.id = UUID.nameUUIDFromBytes((name).getBytes());
         this.name = name;
+    }
+
+    public Category(String name, UUID parent_id) {
+        this.id = UUID.nameUUIDFromBytes((name).getBytes());
+        this.name = name;
+        this.parent_id = parent_id;
     }
 }
