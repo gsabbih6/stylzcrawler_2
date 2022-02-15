@@ -13,18 +13,18 @@ public class Store {
     @PrimaryKey
     UUID id;
     String name;
-    String url;
-    String logoUrl;
-    String country;
+//    String url;
+//    String logoUrl;
+//    String country;
     boolean active = true;
     boolean subscriber = false;
     String referralCode;
 
-    public Store(String name, String url, String logoUrl, String country) {
+    public Store(String name) {
         this.name = name;
-        this.url = url;
-        this.id = UUID.nameUUIDFromBytes((name + url).getBytes());//randomUUID();//fromString(name + url);
-        this.logoUrl = logoUrl;
-        this.country = country;
+//        this.url = url;
+        this.id = UUID.nameUUIDFromBytes((name).getBytes());//randomUUID();//fromString(name + url);
+//        this.logoUrl = logoUrl;
+//        this.country = country;
     }
 }

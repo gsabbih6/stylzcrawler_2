@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Processor {
@@ -27,7 +28,7 @@ public class Processor {
     }
 
     //
-    public void process(Page page) {
+    public void process(Page page) throws IOException {
 
         String url = page.getWebURL().getURL();
 //        System.out.println("URL: " + url);
@@ -52,7 +53,7 @@ public class Processor {
 
     }
 
-    private void processZerefashion(String category, String url, HtmlParseData data) {
+    private void processZerefashion(String category, String url, HtmlParseData data) throws IOException {
         if (category == null) System.out.println("service null");
         Category category1 = categoryService.create(new Category(category));
         String html = data.getHtml();
@@ -79,17 +80,15 @@ public class Processor {
         Set<UUID> cat = new HashSet<>();
         cat.add(category1.getId());
 
-        Store store = storeService.create(new Store("Zerefashionhouse", "https://www.zerefashionhouse.com/",
-                "https://www.zerefashionhouse.com/image/catalog/Zere_Fashion_House_Logo.png",
-                Enumerations.COUNTRY_UK));
+        Store store = storeService.create(new Store("Zerefashionhouse"));
 //        String paymentUrl, String productName, Set<String> imageUrls, String productDetails, String price, String brandName, Set<UUID> categories, UUID store
-        Product p = productService.create(new Product(paymentUrl, productName, imageUrls, description, price, brandname, cat, store.getId()));
+        Product p = productService.create(new Product(paymentUrl, productName, imageUrls, description, Double.valueOf(price), brandname, cat, store.getId()));
 
         LOGGER.info(p);
         System.out.println("Product saved: " + p.toString());
     }
 
-    private void processDiyano(String category, String url, HtmlParseData data, String affiliateCode) {
+    private void processDiyano(String category, String url, HtmlParseData data, String affiliateCode) throws IOException {
         if (category == null) System.out.println("service null");
         Category category1 = categoryService.create(new Category(category));
         String html = data.getHtml();
@@ -111,11 +110,9 @@ public class Processor {
         Set<UUID> cat = new HashSet<>();
         cat.add(category1.getId());
 
-        Store store = storeService.create(new Store("Diyanu", "https://www.diyanu.com/",
-                "https://cdn.shopify.com/s/files/1/0684/2619/files/logo-color_210x@2x.png?v=1589391997",
-                Enumerations.COUNTRY_USA));
+        Store store = storeService.create(new Store("Diyanu"));
 //        String paymentUrl, String productName, Set<String> imageUrls, String productDetails, String price, String brandName, Set<UUID> categories, UUID store
-        Product p = productService.create(new Product(paymentUrl, productName, imageUrls, description, price, "", cat, store.getId()));
+        Product p = productService.create(new Product(paymentUrl, productName, imageUrls, description, Double.valueOf(price), "", cat, store.getId()));
 
         LOGGER.info(p);
         System.out.println("Product saved: " + p.toString());

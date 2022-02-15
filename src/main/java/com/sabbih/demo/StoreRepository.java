@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface StoreRepository extends CassandraRepository<Store, UUID> {
 
-    boolean existsByUrl(String url);
+//    boolean existsByUrl(String url);
 }

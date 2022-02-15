@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-@CrossOrigin
+//@CrossOrigin
 @RestController
-@RequestMapping("/category")
+@RequestMapping("api/category")
 public class CategoryController {
     @Autowired
     CategoryService service;
@@ -24,7 +25,7 @@ public class CategoryController {
     }
 
     @PutMapping("/create")
-    public ResponseEntity<Category> addProduct(@Valid @RequestBody Category product) {
+    public ResponseEntity<Category> addProduct(@Valid @RequestBody Category product) throws IOException {
         Category p = service.create(product);
         return new ResponseEntity<>(p, HttpStatus.CREATED);
     }

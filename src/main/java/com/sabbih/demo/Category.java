@@ -1,5 +1,6 @@
 package com.sabbih.demo;
 
+
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -11,9 +12,10 @@ import java.util.UUID;
 @Table
 public class Category {
     @PrimaryKey
-    UUID id;
+    private UUID id;
     UUID parent_id;
     String name;
+//    int count_items;
     /* use empty constructor*/
     public Category() {
     }

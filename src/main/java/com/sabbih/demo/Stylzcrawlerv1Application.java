@@ -1,5 +1,8 @@
 package com.sabbih.demo;
 
+import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.utils.Utils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicHeader;
@@ -15,15 +18,25 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.client.RestTemplate;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.io.IOException;
+import java.time.Duration;
 //import springfox.documentation.builders.PathSelectors;
 //import springfox.documentation.builders.RequestHandlerSelectors;
 //import springfox.documentation.spi.DocumentationType;
 //import springfox.documentation.spring.web.plugins.Docket;
 
 @SpringBootApplication
-@EnableCassandraRepositories(basePackageClasses =
-        {ProductRepository.class, StoreRepository.class, CategoryRepository.class, ColourRepository.class})
+//@EnableWebSecurity
+//@EnableCassandraRepositories(basePackageClasses =
+//        {ProductRepository.class, StoreRepository.class, CategoryRepository.class, ColourRepository.class})
 
 public class Stylzcrawlerv1Application {
     @Bean
@@ -45,11 +58,22 @@ public class Stylzcrawlerv1Application {
 //                            }
 //                        }));
 //    }
+
     @Bean
     public RestHighLevelClient client() {
         ClientConfiguration clientConfiguration
                 = ClientConfiguration.builder()
-                .connectedTo("https://stylz.es.eastus2.azure.elastic-cloud.com:9243") //https://stylz.es.eastus2.azure.elastic-cloud.com:9243
+//                .connectedTo("es02")
+                .connectedTo("10.42.129.216:9200")
+//                .connectedTo("localhost:9200")
+//                .withConnectTimeout(50000)
+//                .usingSsl()
+//                .withProxy("localhost:8888")
+//                .withPathPrefix("ela")
+//                .withConnectTimeout(Duration.ofSeconds(50))
+//                .withSocketTimeout(Duration.ofSeconds(30))
+//                .withDefaultHeaders(defaultHeaders)
+//                .withBasicAuth()
                 .build();
 
         return RestClients.create(clientConfiguration).rest();
@@ -58,6 +82,14 @@ public class Stylzcrawlerv1Application {
     @Bean
     public ElasticsearchOperations elasticsearchTemplate() {
         return new ElasticsearchRestTemplate(client());
+    }
+
+    @Bean
+    public ImageKit imagekit() throws IOException {
+        ImageKit imageKit = ImageKit.getInstance();
+        Configuration config = Utils.getSystemConfig(Stylzcrawlerv1Application.class);
+        imageKit.setConfig(config);
+        return imageKit;
     }
 
     public static void main(String[] args) {

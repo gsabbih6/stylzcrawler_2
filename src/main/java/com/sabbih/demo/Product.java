@@ -23,7 +23,7 @@ public class Product {
     @NotNull(message = "product_details  is required")
     String product_details;
     @NotNull(message = "product_details  is required")
-    Set<String> price;
+    Set<Double> price;
 
     //    String vendorProductCode;
     @NotNull(message = "product_details  is required")
@@ -44,14 +44,14 @@ public class Product {
     }
 
     /* use empty constructor*/
-    public Product(String program_name, String SKU) {
-        this.id = UUID.nameUUIDFromBytes((SKU + program_name).getBytes());
+    public Product(String program_name, String product_name) {
+        this.id = UUID.nameUUIDFromBytes((product_name + program_name).getBytes());
         this.program_name
                 = program_name;
-        this.SKU = SKU;
+//        this.SKU = SKU;
     }
 
-    public Product(String payment_url, String product_name, Set<String> image_urls, String product_details, String price, String brand_name, Set<UUID> category_id, UUID store_id) {
+    public Product(String payment_url, String product_name, Set<String> image_urls, String product_details, Double price, String brand_name, Set<UUID> category_id, UUID store_id) {
         this.payment_url = payment_url;
         this.id = UUID.nameUUIDFromBytes((payment_url + product_name).getBytes());
         this.product_name = product_name;
@@ -66,14 +66,14 @@ public class Product {
         this.store_id = store_id;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         if (this.price == null) {
             this.price = new LinkedHashSet<>();
         }
         this.price.add(price);
     }
 
-    public Set<String> getPrice() {
+    public Set<Double> getPrice() {
         return price;
     }
 }
