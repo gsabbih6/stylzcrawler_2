@@ -120,16 +120,15 @@ public class ProductController {
 
     private Product getProduct(Datum item) throws IOException {
 
-        String imageUrl = service.uploadImageToIK(item.getImageUrl(), item.getProgramName() + item.getName()
+        String imageUrl = service.uploadImageToIK(item.getImageUrl(), item.getProgramName() + "-" + item.getName()
                 .replace("?", "")
                 .replace("=", "")
-                .replace(" ", "")
+                .replace(" ", "-")
                 .replace("'", "")
                 .replace("!", "")
                 .replace("@", "")
                 .replace(".png", "")
                 .replace("_", "")
-                .replace("-", "")
                 .replace(".jpg", "")
                 .replace("\\", "")
                 .replace(",", "")
