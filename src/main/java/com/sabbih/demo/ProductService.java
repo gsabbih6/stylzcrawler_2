@@ -100,6 +100,7 @@ public class ProductService {
 //            }
             String base64 = Utils.fileToBase64(outputfile);
             FileCreateRequest fileCreateRequest = new FileCreateRequest(base64, name + ".jpg");
+            fileCreateRequest.setUseUniqueFileName(false);
             Result result = imagekit.upload(fileCreateRequest);
             if (result == null) {
                 System.out.println("Upload failes");

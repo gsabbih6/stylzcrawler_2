@@ -48,13 +48,16 @@
 //
 //        search.queryFilter(model, "3");
 //    }
+////    https://ik.imagekit.io/8vky2ggldr3/text_q-vicbwGy.jpg
+////    https://ik.imagekit.io/8vky2ggldr3/text_SkGha6FfoEi.jpg
+//    //https://ik.imagekit.io/8vky2ggldr3/text_EppkupkBG.jpg
 //
 //    @Test
 //    void product() throws IOException {
 ////        productController.processPepperJamRequests();
-////        System.out.println(productService
-////                .uploadImageToIK
-////                        ("https://cdn.shopify.com/s/files/1/0248/1455/1074/products/DOLCE1301_BLUSH_LB_CA_L.jpg?v=1612063364"));
+//        System.out.println(productService
+//                .uploadImageToIK
+//                        ("https://cdn.shopify.com/s/files/1/0248/1455/1074/products/ADORE0341P_BLACK_LB_CA_L.jpg?v=1581978231","text"));
 ////       ("https://cdn.shopify.com/s/files/1/0248/1455/1074/products/AMORE9441_NA-NA_LB_CA_L.jpg?v=1637431601"));
 ////        Product p = new Product();
 ////        p.setId(UUID.fromString("89c09438-0379-3932-bdc0-6ed67c6d2edc"));
