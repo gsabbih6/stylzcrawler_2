@@ -57,6 +57,7 @@ com\sabbih\demo\Crawler.class
 com\sabbih\demo\WardrobeService.class
 com\sabbih\demo\PepperJamProduct.class
 com\sabbih\demo\SwaggerConfig.class
+com\sabbih\demo\IngressController.class
 com\sabbih\demo\PurchaseRepository.class
 com\sabbih\demo\Enumerations.class
 com\sabbih\demo\Purchase.class
