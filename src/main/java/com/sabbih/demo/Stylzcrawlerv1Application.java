@@ -64,7 +64,7 @@ public class Stylzcrawlerv1Application {
         ClientConfiguration clientConfiguration
                 = ClientConfiguration.builder()
 //                .connectedTo("es02")
-                .connectedTo("10.42.129.216:9200")
+                .connectedTo("10.60.8.57:9200")
 //                .connectedTo("localhost:9200")
 //                .withConnectTimeout(50000)
 //                .usingSsl()
