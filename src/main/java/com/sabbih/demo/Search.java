@@ -196,6 +196,56 @@ public class Search {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/query_recommended_brand")
+    public ResponseEntity<List<Product>> queryRecommendedBrand(@RequestParam String query, @RequestParam String page) throws IOException {
+//        String url = "http://localhost:2288/test3";
+        SearchRequest searchRequest = new SearchRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//        SignificantTextAggregationBuilder significant = AggregationBuilders.significantText("query", "product_details");
+//        significant.subAggregation(AggregationBuilders.topHits("top_hit"));
+//        searchSourceBuilder.aggregation(significant);
+//        searchSourceBuilder.query(QueryBuilders.matchQuery(, query));
+
+//        QueryBuilders
+//                .multiMatchQuery(query, "brand_name").boost(0.1f);
+
+        QueryBuilder qb = new BoolQueryBuilder()
+                .should(QueryBuilders.multiMatchQuery(query, "brand_name")
+//                        .analyzer("atsCustomSearchAnalyzer")
+                        .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
+                );
+//                        .operator(Operator.AND));
+//                .should(QueryBuilders.multiMatchQuery(term, "ngramFirstName^3", "ngramLastName^3", "ngramLocationName^3", "ngramCompanyName^3", "_all")
+//                        .analyzer("atsCustomSearchAnalyzer")
+//                        .operator(Operator.AND));
+
+
+        searchSourceBuilder.query(qb);
+        int size = 3;
+        int from = page == "0" || page == "1" ? 0 : Integer.parseInt(page) * size;
+        searchSourceBuilder.from(from);
+        searchSourceBuilder.size(size);
+        // Sugesstion
+//        SuggestionBuilder termSuggestionBuilder =
+//                SuggestBuilders.termSuggestion("product_details").text(query);
+//        SuggestBuilder suggestBuilder = new SuggestBuilder();
+//        suggestBuilder.addSuggestion("suggest_product_search", termSuggestionBuilder);
+//        searchSourceBuilder.suggest(suggestBuilder);
+
+        searchRequest.source(searchSourceBuilder);
+        SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = response.getHits();
+
+        List<Product> products = new ArrayList<>();
+        for (SearchHit hit : hits.getHits()) {
+            Gson gson = new Gson();
+            Product p = gson.fromJson(hit.getSourceAsString(), Product.class);
+            products.add(p);
+        }
+        System.out.println(products);
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("/query_price_low_high")
     public ResponseEntity<List<Product>> queryPriceLowHigh(@RequestParam String query, @RequestParam String page) throws IOException {
 //        String url = "http://localhost:2288/test3";
@@ -283,7 +333,7 @@ public class Search {
 
     @PostMapping("/filter")
     public ResponseEntity<Products> queryFilter(@RequestBody FilterModel model,
-                                                     @RequestParam String page) throws IOException {
+                                                @RequestParam String page) throws IOException {
         SearchRequest searchRequest = new SearchRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         CountRequest countRequest = new CountRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);

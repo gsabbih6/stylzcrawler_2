@@ -218,5 +218,15 @@ public class ProductController {
         return ResponseEntity.ok(list);
 
     }
+    @PostMapping("/productlist")
+    public ResponseEntity<List<Product>> getByID(@RequestBody List<String> ids) {
 
+        List<Product> list = new ArrayList<>();
+
+        for (String id : ids) {
+            list.add(service.get(UUID.fromString(id)).get());
+        }
+        return ResponseEntity.ok(list);
+
+    }
 }
