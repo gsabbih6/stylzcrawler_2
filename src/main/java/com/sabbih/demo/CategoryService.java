@@ -24,10 +24,10 @@ public class CategoryService {
     RestHighLevelClient elastic;
 
     public Category create(Category category) throws IOException {
-        IndexRequest request = new IndexRequest(StylConstants.ELASTIC_CATEGORY_INDEX_NAME);
-        request.id(category.getId().toString());
-        request.source(new Gson().toJson(category), XContentType.JSON);
-        elastic.index(request, RequestOptions.DEFAULT);
+//        IndexRequest request = new IndexRequest(StylConstants.ELASTIC_CATEGORY_INDEX_NAME);
+//        request.id(category.getId().toString());
+//        request.source(new Gson().toJson(category), XContentType.JSON);
+//        elastic.index(request, RequestOptions.DEFAULT);
         return categoryRepository.save(category);
     }
 

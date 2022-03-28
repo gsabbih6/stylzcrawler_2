@@ -33,11 +33,13 @@ public class Product {
     @NotNull(message = "product_details  is required") String program_name;
     UUID store_id;
     @NotNull(message = "product_details  is required") Set<UUID> category_id;
+    @NotNull(message = "category is required") Set<String> category_name;
     UUID color_id;
     @NotNull(message = "product_details  is required") String SKU;
     boolean available = true;
     @NotNull(message = "product_details  is required") String program_icon_url
             = "https://d2gjrq7hs8he14.cloudfront.net/webpack4/logo@2x-8d56700bf4acf5930388f3bea97c0260.png";
+    String color;
 
     /* use empty constructor*/
     public Product() {
@@ -76,4 +78,6 @@ public class Product {
     public Set<Double> getPrice() {
         return price;
     }
+
+
 }

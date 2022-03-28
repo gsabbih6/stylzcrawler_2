@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "genders",
         "category",
         "store",
+        "brand",
         "min_price",
         "max_price"
 })
@@ -29,6 +30,8 @@ public class FilterModel {
     private List<CategoryDTO> category = null;
     @JsonProperty("store")
     private List<StoreDTO> store = null;
+    @JsonProperty("brand")
+    private List<BrandDTO> brand = null;
     @JsonProperty("min_price")
     private String minPrice;
     @JsonProperty("max_price")
@@ -63,6 +66,15 @@ public class FilterModel {
 
     @JsonProperty("store")
     public void setStore(List<StoreDTO> store) {
+        this.store = store;
+    }
+    @JsonProperty("brand")
+    public List<StoreDTO> getBrand() {
+        return store;
+    }
+
+    @JsonProperty("brand")
+    public void setBrand(List<StoreDTO> store) {
         this.store = store;
     }
 

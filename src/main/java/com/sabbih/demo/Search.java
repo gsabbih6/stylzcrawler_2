@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @CrossOrigin
 @RestController
@@ -36,6 +37,9 @@ public class Search {
     private RestTemplate restTemplate;
     @Autowired
     private RestHighLevelClient restHighLevelClient;
+
+    @Autowired
+    private BrandService brandService;
 
     @GetMapping("/hotnow")
     public ResponseEntity<List<Product>> searchHotNow() throws IOException {
@@ -104,10 +108,10 @@ public class Search {
 //        searchSourceBuilder.query(QueryBuilders.matchQuery(, query));
 
         QueryBuilders
-                .multiMatchQuery(query, "product_name", "product_details", "brand_name").boost(0.1f);
+                .multiMatchQuery(query, "product_name", "product_details", "brand_name", "category_name").boost(0.1f);
 
         QueryBuilder qb = new BoolQueryBuilder()
-                .should(QueryBuilders.multiMatchQuery(query, "product_name", "product_details", "brand_name")
+                .should(QueryBuilders.multiMatchQuery(query, "product_name", "product_details", "brand_name", "category_name")
 //                        .analyzer("atsCustomSearchAnalyzer")
                         .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
                         .operator(Operator.AND));
@@ -158,10 +162,10 @@ public class Search {
 //        searchSourceBuilder.query(QueryBuilders.matchQuery(, query));
 
         QueryBuilders
-                .multiMatchQuery(query, "product_name", "product_details", "brand_name").boost(0.1f);
+                .multiMatchQuery(query, "product_name", "product_details", "brand_name", "category_name").boost(0.1f);
 
         QueryBuilder qb = new BoolQueryBuilder()
-                .should(QueryBuilders.multiMatchQuery(query, "product_name", "product_details", "brand_name")
+                .should(QueryBuilders.multiMatchQuery(query, "product_name", "product_details", "brand_name", "category_name")
 //                        .analyzer("atsCustomSearchAnalyzer")
                         .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
                         .operator(Operator.AND));
@@ -197,13 +201,18 @@ public class Search {
     }
 
     @GetMapping("/query_recommended_brand")
-    public ResponseEntity<List<Product>> queryRecommendedBrand(@RequestParam String query, @RequestParam String page) throws IOException {
+    public ResponseEntity<Products> queryRecommendedBrand() throws IOException {
+        List<Brand> brands = brandService.getAll();
+        Random rand = new Random();
+        String query = brands.get(rand.nextInt(brands.size())).name;
+        String page = String.valueOf(rand.nextInt(20));
+
 //        String url = "http://localhost:2288/test3";
         SearchRequest searchRequest = new SearchRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        SignificantTextAggregationBuilder significant = AggregationBuilders.significantText("query", "product_details");
+        SignificantTextAggregationBuilder significant = AggregationBuilders.significantText("query", "brand_name");
 //        significant.subAggregation(AggregationBuilders.topHits("top_hit"));
-//        searchSourceBuilder.aggregation(significant);
+        searchSourceBuilder.aggregation(significant);
 //        searchSourceBuilder.query(QueryBuilders.matchQuery(, query));
 
 //        QueryBuilders
@@ -212,7 +221,7 @@ public class Search {
         QueryBuilder qb = new BoolQueryBuilder()
                 .should(QueryBuilders.multiMatchQuery(query, "brand_name")
 //                        .analyzer("atsCustomSearchAnalyzer")
-                        .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
+                                .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
                 );
 //                        .operator(Operator.AND));
 //                .should(QueryBuilders.multiMatchQuery(term, "ngramFirstName^3", "ngramLastName^3", "ngramLocationName^3", "ngramCompanyName^3", "_all")
@@ -242,8 +251,12 @@ public class Search {
             Product p = gson.fromJson(hit.getSourceAsString(), Product.class);
             products.add(p);
         }
-        System.out.println(products);
-        return ResponseEntity.ok(products);
+        System.out.println("brands are: " + query + " "+ page);
+
+        Products products1 = new Products();
+        products1.setProducts(products);
+        products1.setCount(3);
+        return ResponseEntity.ok(products1);
     }
 
     @GetMapping("/query_price_low_high")
@@ -339,6 +352,7 @@ public class Search {
         CountRequest countRequest = new CountRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);
         MultiMatchQueryBuilder categoryFilter;
         TermsQueryBuilder storeFilter;
+        TermsQueryBuilder brandFilter;
         RangeQueryBuilder priceFilter;
         MultiMatchQueryBuilder genderFilter;
 
@@ -359,10 +373,12 @@ public class Search {
             });
         if (!genderquery.toString().isEmpty()) {
             genderFilter = QueryBuilders.multiMatchQuery(genderquery.toString(),
-                    "product_name", "product_details", "brand_name")
+                    "product_name", "product_details", "brand_name", "category_name")
                     .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
                     .operator(Operator.OR);
             qb.must(genderFilter);
+        } else {
+            qb.must(QueryBuilders.matchAllQuery());
         }
 
         // category
@@ -373,18 +389,19 @@ public class Search {
             model.getCategory().stream().forEach(cat -> {
                 if (cat != null) {
                     catquery.append(cat.getName()).append(" ").append(cat.getId());
-                    category.add(cat.getId());
+                    category.add(cat.getName());
                     if (cat.getChildren() != null)
                         cat.getChildren().stream().forEach(child -> {
                             catquery.append(child.getName()).append(" ").append(child.getId());
-                            category.add(child.getId());
+                            category.add(child.getName());
                         });
                 }
                 //children
             });
         if (!catquery.toString().isEmpty()) {
-            categoryFilter = QueryBuilders.multiMatchQuery(catquery.toString(),
-                    "product_name", "product_details", "brand_name", "category_id")
+            categoryFilter = QueryBuilders
+                    .multiMatchQuery(catquery.toString(), "category_name")
+//                    .multiMatchQuery(catquery.toString(), "product_name", "product_details", "brand_name", "category_name")
                     .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS)
                     .operator(Operator.OR);
             ;
@@ -402,6 +419,16 @@ public class Search {
             qb.filter(storeFilter);
         }
 
+        //Brand
+        List<String> brands = new ArrayList<>();
+        if (model.getBrand() != null)
+            model.getBrand().stream().forEach(brand -> {
+                brands.add(brand.getName());
+            });
+        if (!stores.isEmpty()) {
+            brandFilter = QueryBuilders.termsQuery("brand_name.keyword", stores);
+            qb.filter(brandFilter);
+        }
         //Price
         if (model.getMinPrice() != null && model.getMaxPrice() != "0.00" && model.getMaxPrice() != null) {
             double minPrice = Double.parseDouble(model.getMinPrice());

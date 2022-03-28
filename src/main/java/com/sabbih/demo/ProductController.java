@@ -28,10 +28,16 @@ public class ProductController {
     StoreService storeService;
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    ColourService colourService;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     RestHighLevelClient elasRestHighLevelClient;
+
+    @Autowired
+    BrandService brandService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable String id) {
@@ -165,6 +171,7 @@ public class ProductController {
         product.setSKU(item.getSku());
         product.setShipping_price(item.getPriceShipping());
         Set<UUID> category_id = new LinkedHashSet<>();
+        Set<String> category_name = new LinkedHashSet<>();
 //                System.err.println(item.getCategoryProgram());
         String[] cat1 = item.getCategoryNetwork().equalsIgnoreCase("") ?
                 item.getCategoryProgram().split(">") : item.getCategoryNetwork().split(">");
@@ -173,6 +180,7 @@ public class ProductController {
         categoryService.create(c);
         for (int j = 0; j < cat1.length; j++) {
             category_id.add(UUID.nameUUIDFromBytes((cat1[j]).getBytes()));
+            category_name.add(cat1[j]);
             if (j == 0) {
                 //root must be added to category
                 c = new Category(cat1[j], UUID.nameUUIDFromBytes(("Category").getBytes()));
@@ -186,8 +194,15 @@ public class ProductController {
             }
         }
         product.setCategory_id(category_id);
+        product.setCategory_name(category_name);
+
         product.setBrand_name(item.getManufacturer() == null || item.getManufacturer().isEmpty() ||
-                item.getManufacturer().equalsIgnoreCase("") ? "" : item.getManufacturer());
+                item.getManufacturer().equalsIgnoreCase("") ? item.getProgramName() : item.getManufacturer());
+        product.setColor(item.getColor() == null || item.getColor().isEmpty() ||
+                item.getColor().equalsIgnoreCase("") ? "" : item.getColor());
+
+        if (!product.color.equalsIgnoreCase("")) colourService.save(new Colour(product.getColor()));
+        brandService.save(new Brand(product.getBrand_name()));
         return product;
     }
 
