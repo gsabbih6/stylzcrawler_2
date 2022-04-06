@@ -40,6 +40,7 @@ public class Product {
     @NotNull(message = "product_details  is required") String program_icon_url
             = "https://d2gjrq7hs8he14.cloudfront.net/webpack4/logo@2x-8d56700bf4acf5930388f3bea97c0260.png";
     String color;
+    String cashback;
 
     /* use empty constructor*/
     public Product() {

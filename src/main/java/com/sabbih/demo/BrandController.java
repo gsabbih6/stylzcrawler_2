@@ -22,7 +22,7 @@ public class BrandController {
     public ResponseEntity<Brand>create(@RequestBody Brand brand){
 
         if(brand!=null){
-            return ResponseEntity.ok(service.save(brand));
+            return ResponseEntity.ok(service.save(brand, product.getId()));
         }
         return (ResponseEntity<Brand>) ResponseEntity.badRequest();
     }

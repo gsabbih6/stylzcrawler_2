@@ -73,9 +73,22 @@ public class ProductController {
         return ResponseEntity.ok(service.getTotalItems());
     }
 
-
     @GetMapping("/pepperjamnetwork")
-    public void processPepperJamRequests(@RequestParam String programid) throws Exception {
+    public void processPepperJamRequests() {
+        List<Integer> arraylist = Arrays.asList(AppConstants.storeIDs);
+
+        arraylist.parallelStream().forEach((id) -> {
+            try {
+                processPepperJamRequests(String.valueOf(id));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+    //    @GetMapping("/pepperjamnetwork")
+    private void processPepperJamRequests(@RequestParam String programid) throws Exception {
         String url = "https://api.pepperjamnetwork.com/20120402/publisher/creative/product?";
         String apiKey = "281b24302f4c6ccfd725d79dd222bffe1414d903eb9d0c1ca1feb20af9787272";
         PepperJamProduct pepperJamProduct =
@@ -196,13 +209,29 @@ public class ProductController {
         product.setCategory_id(category_id);
         product.setCategory_name(category_name);
 
+        //get store commission
+        Store s = storeService.get(UUID.nameUUIDFromBytes(item.getProgramName().getBytes())).get();
+        if (s != null) {
+            double commission = Double.valueOf(s.getPercentagePayout()) / 100;
+            // calc how much i make
+            double ourcut = Double.valueOf(item.getPrice()) * commission;
+            // cal how much i give
+            double yourcut = (Double.valueOf(item.getPrice()) - ourcut) * commission * 0.3;
+            // cacl user perc
+            double usersees = yourcut / Double.valueOf(item.getPrice());
+            //cs\ash back
+            product.setCashback(String.valueOf((int) (usersees * 100))+"%`");
+        }
+
         product.setBrand_name(item.getManufacturer() == null || item.getManufacturer().isEmpty() ||
                 item.getManufacturer().equalsIgnoreCase("") ? item.getProgramName() : item.getManufacturer());
         product.setColor(item.getColor() == null || item.getColor().isEmpty() ||
                 item.getColor().equalsIgnoreCase("") ? "" : item.getColor());
 
         if (!product.color.equalsIgnoreCase("")) colourService.save(new Colour(product.getColor()));
-        brandService.save(new Brand(product.getBrand_name()));
+
+
+        brandService.save(new Brand(product.getBrand_name()),product.getId());
         return product;
     }
 

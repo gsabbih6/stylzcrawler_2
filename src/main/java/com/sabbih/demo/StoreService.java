@@ -27,11 +27,11 @@ public class StoreService {
     RestHighLevelClient elastic;
 
     public Store create(Store store) throws IOException {
-        IndexRequest request = new IndexRequest(StylConstants.ELASTIC_STORE_INDEX_NAME);
-        request.id(store.getId().toString());
-        request.source(new Gson().toJson(store), XContentType.JSON);
-        IndexResponse response = elastic.index(request, RequestOptions.DEFAULT);
-        System.out.println("category: " + response.toString());
+//        IndexRequest request = new IndexRequest(StylConstants.ELASTIC_STORE_INDEX_NAME);
+//        request.id(store.getId().toString());
+//        request.source(new Gson().toJson(store), XContentType.JSON);
+//        IndexResponse response = elastic.index(request, RequestOptions.DEFAULT);
+//        System.out.println("category: " + response.toString());
         return storeRepository.save(store);
     }
 

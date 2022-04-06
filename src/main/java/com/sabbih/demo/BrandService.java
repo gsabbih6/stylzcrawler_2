@@ -13,8 +13,8 @@ public class BrandService {
     @Autowired
     BrandRepository repository;
 
-    public Brand save(Brand brand) {
-        brand.setId(UUID.nameUUIDFromBytes(brand.getName().getBytes(StandardCharsets.UTF_8)));
+    public Brand save(Brand brand, UUID id) {
+        brand.addProduct(id.toString());
         return repository.save(brand);
     }
 

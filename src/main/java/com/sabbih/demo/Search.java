@@ -204,8 +204,9 @@ public class Search {
     public ResponseEntity<Products> queryRecommendedBrand() throws IOException {
         List<Brand> brands = brandService.getAll();
         Random rand = new Random();
-        String query = brands.get(rand.nextInt(brands.size())).name;
-        String page = String.valueOf(rand.nextInt(20));
+        Brand brand = brands.get(rand.nextInt(brands.size()));
+        String query = brand.getName();
+        String page = String.valueOf(rand.nextInt(brand.product_id.size()));
 
 //        String url = "http://localhost:2288/test3";
         SearchRequest searchRequest = new SearchRequest(StylConstants.ELASTIC_PRODUCT_INDEX_NAME);

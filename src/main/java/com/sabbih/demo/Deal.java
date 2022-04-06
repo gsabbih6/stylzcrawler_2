@@ -12,9 +12,9 @@ import java.util.UUID;
 public class Deal {
     @PrimaryKey
     private UUID id;
-    UUID productId;
-    String discountCode;
-    LocalDateTime expiryDate;
+    UUID productid;
+    String discountcode;
+    LocalDateTime expirydate;
     String info;
 
 }
