@@ -18,11 +18,25 @@ public class BrandController {
         return ResponseEntity.ok(brands);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Brand>create(@RequestBody Brand brand){
+    @GetMapping("/editorschoice")
+    public ResponseEntity<List<Brand>> editorschoice() {
+        List<Brand> brands = service.getAll();
+        return ResponseEntity.ok(brands);
+    }
 
-        if(brand!=null){
-            return ResponseEntity.ok(service.save(brand, product.getId()));
+    @PostMapping("/editorschoice")
+    public ResponseEntity<Brand> editorschoice(@RequestBody Brand brand) {
+        if (brand != null) {
+            return ResponseEntity.ok(service.save(brand));
+        }
+        return (ResponseEntity<Brand>) ResponseEntity.badRequest();
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Brand> create(@RequestBody Brand brand) {
+
+        if (brand != null) {
+            return ResponseEntity.ok(service.save(brand));
         }
         return (ResponseEntity<Brand>) ResponseEntity.badRequest();
     }

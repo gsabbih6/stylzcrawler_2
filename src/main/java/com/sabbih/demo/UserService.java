@@ -23,12 +23,12 @@ public class UserService {
     private static String CLIENT_PROPERTY_KEY
             = "spring.security.oauth2.client.registration.";
     @Autowired
-    UserRepository controller;
+    UserRepository repository;
     @Autowired
     Environment env;
 
     public User update(User user) {
-        return controller.save(user);
+        return repository.save(user);
     }
 
     public User save(String idTokenString, String client) throws GeneralSecurityException, IOException {
@@ -87,8 +87,12 @@ public class UserService {
             System.out.println("Invalid ID token.");
         }
 
-        if (controller.existsById(user.id)) return controller.findById(user.id).get();
+        if (repository.existsById(user.id)) return repository.findById(user.id).get();
 
-        return controller.save(user);
+        return repository.save(user);
+    }
+
+    public User findById(UUID fromString) {
+        return repository.findById(fromString).get();
     }
 }

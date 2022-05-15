@@ -8,18 +8,18 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("api/discover")
-public class DiscoverController {
+@RequestMapping("api/deals")
+public class DealController {
     @Autowired
-    DiscoverService service;
+    DealService service;
 
     @GetMapping("/all")
-    public ResponseEntity<List<DiscoverDTO>> getall() {
+    public ResponseEntity<List<Deal>> getDeals() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Discover> addDiscvoer(@RequestBody Discover discover) {
-        return ResponseEntity.ok(service.save(discover));
+    public ResponseEntity<Deal> addDeal(@RequestBody Deal deal) {
+        return ResponseEntity.ok(service.save(deal));
     }
 }

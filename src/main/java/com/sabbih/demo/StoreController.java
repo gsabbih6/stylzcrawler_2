@@ -20,7 +20,7 @@ public class StoreController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @GetMapping()
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getStore(@PathVariable String id) {
         Optional<Store> opt = service.get(UUID.fromString(id));
         return ResponseEntity.ok(opt.get());
@@ -28,7 +28,7 @@ public class StoreController {
 
     @GetMapping("/pepperstores")
     public ResponseEntity<String> getPepperStores() throws IOException {
-        String url = "https://api.pepperjamnetwork.com/20120402/publisher/advertiser/product?";
+        String url = "https://api.pepperjamnetwork.com/20120402/publisher/advertiser?";
         String apiKey = "281b24302f4c6ccfd725d79dd222bffe1414d903eb9d0c1ca1feb20af9787272";
         PepperJamStore pepperJamStore =
                 restTemplate.getForEntity(url + "apiKey=" + apiKey + "&" + "format=json&status=joined",
@@ -50,7 +50,7 @@ public class StoreController {
                 prepareAnSave(item);
             }
         }
-        return (ResponseEntity<String>) ResponseEntity.ok();
+        return ResponseEntity.ok("Sucess");
     }
 
     @GetMapping("/store_count")
@@ -64,15 +64,16 @@ public class StoreController {
     }
 
 
-    private ResponseEntity<Store> prepareAnSave(StoreDatum item) throws IOException {
+    private void prepareAnSave(StoreDatum item) throws IOException {
         Store s = buildStore(item);
+        System.out.println(item);
         if (s != null)
-            return ResponseEntity.ok(service.create(s));
-        return (ResponseEntity<Store>) ResponseEntity.status(HttpStatus.NOT_FOUND);
+            service.create(s);
+//        return (ResponseEntity<Store>) ResponseEntity.status(HttpStatus.NOT_FOUND);
     }
 
     private Store buildStore(StoreDatum item) {
-        Store store = new Store();
+        Store store = new Store(item.getName());
         store.setId(UUID.nameUUIDFromBytes(item.getName().getBytes()));
         store.setName(item.getName());
         store.setCurrency(item.getCurrency());
@@ -83,20 +84,20 @@ public class StoreController {
         store.setAddress1(item.getAddress1());
         store.setAddress2(item.getAddress2());
         store.setCity(item.getCity());
-        store.setContactName(item.getContactName());
-        store.setCookieDuration(item.getCookieDuration());
-        store.setCountryCode(item.getCountryCode());
-        store.setDeepLinking(item.getDeepLinking());
-        store.setFlatPayout(item.getFlatPayout());
-        store.setJoinDate(item.getJoinDate());
-        store.setMobileTracking(item.getMobileTracking());
-        store.setPercentagePayout(item.getPercentagePayout());
+        store.setContactName(item.getContact_name());
+        store.setCookieDuration(item.getCookie_duration());
+        store.setCountryCode(item.getCountry_code());
+        store.setDeepLinking(item.getDeep_linking());
+        store.setFlatPayout(item.getFlat_payout());
+        store.setJoinDate(item.getJoin_date());
+        store.setMobileTracking(item.getMobile_tracking());
+        store.setPercentagePayout(item.getPercentage_payout());
         store.setPhone(item.getPhone());
-        store.setProductFeed(item.getProductFeed());
-        store.setProhibitedStates(item.getProhibitedStates());
-        store.setStateCode(item.getStateCode());
+        store.setProductFeed(item.getProduct_feed());
+        store.setProhibitedStates(item.getProhibited_states());
+        store.setStateCode(item.getState_code());
         store.setWebsite(item.getWebsite());
-        store.setZipCode(item.getZipCode());
+        store.setZipCode(item.getZip_code());
 
 
         return store;

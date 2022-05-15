@@ -27,7 +27,12 @@ public class UserController {
         User user = service.save(idToken, client);
         return ResponseEntity.ok(user);
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<User> createUser(@PathVariable String id)
+            throws GeneralSecurityException, IOException {
+        User user = service.findById(UUID.fromString(id));
+        return ResponseEntity.ok(user);
+    }
     @PostMapping("/user/update")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         User users = service.update(user);

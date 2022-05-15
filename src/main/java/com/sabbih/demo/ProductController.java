@@ -77,7 +77,7 @@ public class ProductController {
     public void processPepperJamRequests() {
         List<Integer> arraylist = Arrays.asList(AppConstants.storeIDs);
 
-        arraylist.parallelStream().forEach((id) -> {
+        arraylist.stream().forEach((id) -> {
             try {
                 processPepperJamRequests(String.valueOf(id));
             } catch (Exception e) {
@@ -88,7 +88,7 @@ public class ProductController {
     }
 
     //    @GetMapping("/pepperjamnetwork")
-    private void processPepperJamRequests(@RequestParam String programid) throws Exception {
+    public void processPepperJamRequests(@RequestParam String programid) throws Exception {
         String url = "https://api.pepperjamnetwork.com/20120402/publisher/creative/product?";
         String apiKey = "281b24302f4c6ccfd725d79dd222bffe1414d903eb9d0c1ca1feb20af9787272";
         PepperJamProduct pepperJamProduct =
@@ -161,15 +161,17 @@ public class ProductController {
                 .replace("/", "")
                 .replace("~", "")
                 .replace("`", "")
+                .replace("|", "")
+                .replace("-", "")
         );
 //        if (imageUrl.equalsIgnoreCase(item.getImageUrl())) return null;
 
         Product product = new Product(item.getProgramName(), item.getName());
 
-        Store store = new Store(item.getProgramName());
-        storeService.create(store);
+//        Store store = new Store(item.getProgramName());
+//        storeService.create(store);
 
-        product.setStore_id(store.getId());
+//        product.setStore_id(store.getId());
 
         product.available = item.getInStock() == null ? false : item.getInStock().equalsIgnoreCase("Yes");
         product.setProduct_name(item.getName());
@@ -211,16 +213,17 @@ public class ProductController {
 
         //get store commission
         Store s = storeService.get(UUID.nameUUIDFromBytes(item.getProgramName().getBytes())).get();
-        if (s != null) {
+        product.setStore_id(s.getId());
+        if (s.getPercentagePayout() != null) {
             double commission = Double.valueOf(s.getPercentagePayout()) / 100;
             // calc how much i make
             double ourcut = Double.valueOf(item.getPrice()) * commission;
             // cal how much i give
-            double yourcut = (Double.valueOf(item.getPrice()) - ourcut) * commission * 0.3;
+            double yourcut = (Double.valueOf(item.getPrice()) - ourcut) * commission * AppConstants.cashback;
             // cacl user perc
             double usersees = yourcut / Double.valueOf(item.getPrice());
             //cs\ash back
-            product.setCashback(String.valueOf((int) (usersees * 100))+"%`");
+            product.setCashback((int) (usersees * 100) +"%");
         }
 
         product.setBrand_name(item.getManufacturer() == null || item.getManufacturer().isEmpty() ||

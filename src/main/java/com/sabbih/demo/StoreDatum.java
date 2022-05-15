@@ -24,10 +24,10 @@ public class StoreDatum {
     private String logo;
     @SerializedName("prohibited_states")
     @Expose
-    private String prohibitedStates;
+    private String prohibited_states;
     @SerializedName("mobile_tracking")
     @Expose
-    private String mobileTracking;
+    private String mobile_tracking;
 //    @SerializedName("category")
 //    @Expose
 //    private List<Category> category = null;
@@ -42,13 +42,13 @@ public class StoreDatum {
     private String city;
     @SerializedName("state_code")
     @Expose
-    private String stateCode;
+    private String state_code;
     @SerializedName("zip_code")
     @Expose
-    private String zipCode;
+    private String zip_code;
     @SerializedName("country_code")
     @Expose
-    private String countryCode;
+    private String country_code;
     @SerializedName("phone")
     @Expose
     private String phone;
@@ -57,7 +57,7 @@ public class StoreDatum {
     private String website;
     @SerializedName("contact_name")
     @Expose
-    private String contactName;
+    private String contact_name;
     @SerializedName("email")
     @Expose
     private String email;
@@ -69,20 +69,22 @@ public class StoreDatum {
     private String status;
     @SerializedName("join_date")
     @Expose
-    private String joinDate;
+    private String join_date;
     @SerializedName("cookie_duration")
     @Expose
-    private String cookieDuration;
+    private String cookie_duration;
     @SerializedName("percentage_payout")
     @Expose
-    private String percentagePayout;
+    private String percentage_payout;
     @SerializedName("flat_payout")
     @Expose
-    private String flatPayout;
+    private String flat_payout;
     @SerializedName("deep_linking")
     @Expose
-    private String deepLinking;
+    private String deep_linking;
     @SerializedName("product_feed")
     @Expose
-    private String productFeed;
+    private String product_feed;
+
+
 }

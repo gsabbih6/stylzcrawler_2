@@ -17,14 +17,14 @@ public class Brand {
 
     String name;
     String logo;
-    HashSet<String> product_id;
+    HashSet<UUID> product_id;
 
     public Brand(String name) {
         this.name = name;
         this.id = UUID.nameUUIDFromBytes(name.getBytes(StandardCharsets.UTF_8));
     }
 
-    public void addProduct(String id) {
+    public void addProduct(UUID id) {
         if (product_id == null) product_id = new HashSet<>();
 
         product_id.add(id);

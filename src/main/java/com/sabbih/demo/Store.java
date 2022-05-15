@@ -47,4 +47,5 @@ public class Store {
 //        this.logoUrl = logoUrl;
 //        this.country = country;
     }
+
 }

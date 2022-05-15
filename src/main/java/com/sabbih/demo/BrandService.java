@@ -14,10 +14,12 @@ public class BrandService {
     BrandRepository repository;
 
     public Brand save(Brand brand, UUID id) {
-        brand.addProduct(id.toString());
+        brand.addProduct(id);
         return repository.save(brand);
     }
-
+    public Brand save(Brand brand) {
+        return repository.save(brand);
+    }
     public List<Brand> getAll() {
         return repository.findAll();
     }
